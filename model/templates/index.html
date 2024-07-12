@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App with Proctoring</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body oncontextmenu="return false;">
+    <div class="app">
+        <h1>Quiz App with Proctoring</h1>
+        <button id="start-btn">Start Quiz</button>
+        <div id="quiz-container" class="hide">
+            <div id="question"></div>
+            <div id="answer-buttons"></div>
+            <button id="next-btn" class="hide">Next</button>
+            <button id="submit-btn" class="hide">Submit</button>
+        </div>
+        <div id="score-container" class="hide">
+            <div id="score-text"></div>
+        </div>
+    </div>
+    <video id="video" width="320" height="240" autoplay muted></video>
+    <button id="returnFullscreenButton" style="display: none;">Return to Fullscreen</button>
+    <script src="/static/script.js"></script>
+</body>
+</html>
