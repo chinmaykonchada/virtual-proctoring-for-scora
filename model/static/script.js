@@ -1,3 +1,11 @@
+let noFaceCount = 0;
+let multiplePeopleCount = 0;
+let cellPhoneCount = 0;
+let bookCount = 0;
+let audioCount = 0;
+let fullscreenExitCount = 0;
+let copyPasteCount = 0;
+
 const questions = [
     {
         question: "What is the primary use of the SQL language?",
@@ -71,6 +79,8 @@ function startQuiz() {
     score = 0;
     nextButton.innerHTML = "Next";
     showQuestion();
+    startProctoring();
+    resetAlertCounts();
     startProctoring();
 }
 
@@ -148,9 +158,7 @@ function startProctoring() {
         isLockdownActive = true;
         enterFullScreen();
         document.addEventListener('visibilitychange', handleVisibilityChange);
-        document.addEventListener('copy', handleCopyPaste);
-        document.addEventListener('paste', handleCopyPaste);
-        document.addEventListener('cut', handleCopyPaste);
+        addCopyPasteListeners();
     }
 }
 
@@ -169,9 +177,30 @@ function stopProctoring() {
         exitFullScreen();
         hideReturnFullscreenButton();
         document.removeEventListener('visibilitychange', handleVisibilityChange);
-        document.removeEventListener('copy', handleCopyPaste);
-        document.removeEventListener('paste', handleCopyPaste);
-        document.removeEventListener('cut', handleCopyPaste);
+        removeCopyPasteListeners();
+    }
+}
+
+function updateAlertCounts(message) {
+    if (message.includes("No face detected")) {
+        noFaceCount++;
+        document.getElementById('no-face-count').textContent = noFaceCount;
+    }
+    if (message.includes("people detected")) {
+        multiplePeopleCount++;
+        document.getElementById('multiple-people-count').textContent = multiplePeopleCount;
+    }
+    if (message.includes("Cell phone detected")) {
+        cellPhoneCount++;
+        document.getElementById('cell-phone-count').textContent = cellPhoneCount;
+    }
+    if (message.includes("Book detected")) {
+        bookCount++;
+        document.getElementById('book-count').textContent = bookCount;
+    }
+    if (message.includes("Audio detected")) {
+        audioCount++;
+        document.getElementById('audio-count').textContent = audioCount;
     }
 }
 
@@ -223,10 +252,40 @@ function captureFrame() {
             console.log(data.message);
             if (data.alert) {
                 customAlert(data.message);
+                updateAlertCounts(data.message);
             }
         })
         .catch(error => console.error('Error:', error));
     }, 'image/jpeg');
+}
+
+function resetAlertCounts() {
+    noFaceCount = 0;
+    multiplePeopleCount = 0;
+    cellPhoneCount = 0;
+    bookCount = 0;
+    audioCount = 0;
+    fullscreenExitCount = 0;
+    copyPasteCount = 0;
+    document.getElementById('no-face-count').textContent = '0';
+    document.getElementById('multiple-people-count').textContent = '0';
+    document.getElementById('cell-phone-count').textContent = '0';
+    document.getElementById('book-count').textContent = '0';
+    document.getElementById('audio-count').textContent = '0';
+    document.getElementById('fullscreen-exit-count').textContent = '0';
+    document.getElementById('copy-paste-count').textContent = '0';
+}
+
+function addCopyPasteListeners() {
+    document.addEventListener('copy', handleCopyPaste);
+    document.addEventListener('paste', handleCopyPaste);
+    document.addEventListener('cut', handleCopyPaste);
+}
+
+function removeCopyPasteListeners() {
+    document.removeEventListener('copy', handleCopyPaste);
+    document.removeEventListener('paste', handleCopyPaste);
+    document.removeEventListener('cut', handleCopyPaste);
 }
 
 function enterFullScreen() {
@@ -275,6 +334,8 @@ function handleCopyPaste(e) {
     if (isLockdownActive) {
         e.preventDefault();
         customAlert("Copy/Paste is not allowed!");
+        copyPasteCount++;
+        document.getElementById('copy-paste-count').textContent = copyPasteCount;
     }
 }
 
@@ -304,6 +365,8 @@ document.addEventListener('fullscreenchange', () => {
     if (isLockdownActive && !document.fullscreenElement) {
         customAlert("You have exited fullscreen mode. Please return to fullscreen to continue the exam.");
         showReturnFullscreenButton();
+        fullscreenExitCount++;
+        document.getElementById('fullscreen-exit-count').textContent = fullscreenExitCount;
     } else if (document.fullscreenElement) {
         hideReturnFullscreenButton();
     }

@@ -20,7 +20,19 @@
             <div id="score-text"></div>
         </div>
     </div>
-    <video id="video" width="320" height="240" autoplay muted></video>
+    <div class="video-container">
+        <video id="video" width="320" height="240" autoplay muted></video>
+        <div id="alert-counts">
+            <h3>Alert Counts:</h3>
+            <p>No Face: <span id="no-face-count">0</span></p>
+            <p>Multiple People: <span id="multiple-people-count">0</span></p>
+            <p>Cell Phone: <span id="cell-phone-count">0</span></p>
+            <p>Book: <span id="book-count">0</span></p>
+            <p>Audio: <span id="audio-count">0</span></p>
+            <p>Fullscreen Exits: <span id="fullscreen-exit-count">0</span></p>
+            <p>Copy-Paste Attempts: <span id="copy-paste-count">0</span></p>
+        </div>
+    </div>
     <button id="returnFullscreenButton" style="display: none;">Return to Fullscreen</button>
     <script src="/static/script.js"></script>
 </body>
